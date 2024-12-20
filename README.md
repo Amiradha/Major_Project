@@ -1,3 +1,4 @@
+
 # Academic Performance Analysis Dashboard
 
 This Django project is designed to analyze and visualize academic performance metrics, including component performance, grade distribution, and course analysis.
@@ -10,57 +11,63 @@ This Django project is designed to analyze and visualize academic performance me
 
 ## Installation Steps
 
-1. **Clone the Repository**
-```bash
-git clone <repository-url>
-cd academic_project
-```
+1. **Clone the Repository**  
+   Clone the project repository from GitHub:
+   ```bash
+   git clone https://github.com/Amiradha/Major_Project.git
+   cd Major_Project
+   ```
 
-2. **Create and Activate Virtual Environment**
-```bash
-# Windows
-python -m venv venv
-venv\Scripts\activate
+2. **Create and Activate Virtual Environment**  
+   - On **Windows**:
+     ```bash
+     python -m venv venv
+     venv\Scripts\activate
+     ```
+   - On **Linux/MacOS**:
+     ```bash
+     python3 -m venv venv
+     source venv/bin/activate
+     ```
 
-# Linux/MacOS
-python3 -m venv venv
-source venv/bin/activate
-```
+3. **Install Dependencies**  
+   Install all required dependencies using `pip`:
+   ```bash
+   pip install -r requirements.txt
+   ```
 
-3. **Install Dependencies**
-```bash
-pip install -r requirements.txt
-```
+4. **Database Setup**  
+   - Install MySQL Server.
+   - Create a new MySQL database.
+   - Update database settings in `settings.py` with your credentials:
+     ```python
+     DATABASES = {
+         'default': {
+             'ENGINE': 'django.db.backends.mysql',
+             'NAME': 'your_database_name',
+             'USER': 'your_mysql_username',
+             'PASSWORD': 'your_mysql_password',
+             'HOST': 'localhost',
+             'PORT': '3306',
+         }
+     }
+     ```
 
-4. **Database Setup**
-- Install MySQL Server
-- Create a new MySQL database
-- Update database settings in `settings.py`:
-```python
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'your_database_name',
-        'USER': 'your_mysql_username',
-        'PASSWORD': 'your_mysql_password',
-        'HOST': 'localhost',
-        'PORT': '3306',
-    }
-}
-```
+5. **Apply Migrations**  
+   Run the following commands to set up your database schema:
+   ```bash
+   python manage.py makemigrations
+   python manage.py migrate
+   ```
 
-5. **Apply Migrations**
-```bash
-python manage.py makemigrations
-python manage.py migrate
-```
+6. **Run the Development Server**  
+   Start the development server:
+   ```bash
+   python manage.py runserver
+   ```
+   The application will be accessible at `http://127.0.0.1:8000/`.
 
-6. **Run the Development Server**
-```bash
-python manage.py runserver
-```
-
-The application will be available at `http://127.0.0.1:8000/`
+---
 
 ## Features
 
@@ -74,7 +81,7 @@ The application will be available at `http://127.0.0.1:8000/`
 ## Project Structure
 
 ```
-academic_project/
+Major_Project/
 ├── academic/
 │   ├── models.py
 │   ├── views.py
@@ -84,6 +91,8 @@ academic_project/
 ├── manage.py
 └── requirements.txt
 ```
+
+---
 
 ## Dependencies
 
@@ -103,29 +112,41 @@ gunicorn
 whitenoise
 ```
 
+---
+
 ## Troubleshooting
 
 1. **MySQLdb Error**:
-   - Ensure MySQL is installed
-   - Install mysqlclient: `pip install mysqlclient`
+   - Ensure MySQL is installed.
+   - Install `mysqlclient`:
+     ```bash
+     pip install mysqlclient
+     ```
 
 2. **Database Connection**:
-   - Verify MySQL server is running
-   - Check database credentials in settings.py
+   - Ensure the MySQL server is running.
+   - Double-check the database credentials in `settings.py`.
 
 3. **Static Files**:
-   - Run `python manage.py collectstatic`
-   - Ensure STATIC_ROOT is configured in settings.py
+   - Run:
+     ```bash
+     python manage.py collectstatic
+     ```
+   - Ensure `STATIC_ROOT` is configured in `settings.py`.
+
+---
 
 ## Contributing
 
-1. Fork the repository
-2. Create a new branch
-3. Make your changes
-4. Submit a pull request
+1. Fork the repository.
+2. Create a new branch for your feature or bug fix.
+3. Commit and push your changes.
+4. Submit a pull request.
+
+---
 
 ## License
 
 This project is licensed under the MIT License.
 
-Let me know if you need any clarification or have questions about running the project!
+Let me know if there's anything else you'd like to include!
