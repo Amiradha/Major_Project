@@ -1,0 +1,249 @@
+{% extends 'academic/base.html' %}
+
+{% block content %}
+<div class="bg-white rounded-lg shadow-lg p-6 max-w-7xl mx-auto">
+    <!-- Header Section -->
+    <div class="mb-8">
+        <h2 class="text-2xl font-bold text-gray-800 mb-2">Academic Results</h2>
+        <p class="text-gray-600">Filter results step by step: Program → Year → Course</p>
+    </div>
+
+    <!-- Error Message -->
+    {% if error_message %}
+    <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4">
+        {{ error_message }}
+    </div>
+    {% endif %}
+
+    <!-- Filter Form -->
+    <form method="get" class="mb-8 bg-gray-50 p-4 rounded-lg border border-gray-200">
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+            <!-- Program Selection -->
+            <div>
+                <label for="program" class="block text-sm font-medium text-gray-700 mb-1">Program</label>
+                <select 
+                    id="program" 
+                    name="program" 
+                    class="block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                    <option value="">Select Program</option>
+                    {% for program in programs %}
+                        <option value="{{ program }}" 
+                                {% if program == selected_program %}selected{% endif %}>
+                            {{ program }}
+                        </option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <!-- Year Selection (conditionally rendered) -->
+            {% if selected_program and years %}
+            <div>
+                <label for="year" class="block text-sm font-medium text-gray-700 mb-1">Academic Year</label>
+                <select 
+                    id="year" 
+                    name="year" 
+                    class="block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                    <option value="">Select Year</option>
+                    {% for year in years %}
+                        <option value="{{ year }}" 
+                                {% if year == selected_year %}selected{% endif %}>
+                            {{ year }}
+                        </option>
+                    {% endfor %}
+                </select>
+            </div>
+            {% endif %}
+
+
+            <!-- Course Code Selection (conditionally rendered) -->
+            {% if selected_year and courses %}
+            <div>
+                <label for="course_code" class="block text-sm font-medium text-gray-700 mb-1">Course Code</label>
+                <select 
+                    id="course_code" 
+                    name="course_code" 
+                    class="block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                    <option value="">Select Course</option>
+                    {% for course in courses %}
+                        <option value="{{ course }}" 
+                                {% if course == selected_course %}selected{% endif %}>
+                            {{ course }}
+                        </option>
+                    {% endfor %}
+                </select>
+            </div>
+            {% endif %}
+
+            <!-- Submit Button -->
+            <div class="flex items-end">
+                <button type="submit" 
+                    class="w-full md:w-auto px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                    Apply Filters
+                </button>
+            </div>
+        </div>
+    </form>
+
+    <!-- Results Section -->
+    {% if consolidated_data %}
+    <div class="bg-white rounded-lg border border-gray-200">
+        <!-- Current Selection Info -->
+        <div class="p-4 border-b border-gray-200">
+            <h3 class="text-lg font-medium text-gray-900">
+                Results for Program: {{ selected_program }} - Year: {{ selected_year }} - Course: {{ selected_course }}
+            </h3>
+            <p class="mt-1 text-sm text-gray-500">
+                Showing detailed results for the selected filters
+            </p>
+        </div>
+
+        <!-- Results Summary -->
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 p-4 bg-gray-50 border-b">
+            <div class="bg-white p-3 rounded-md shadow-sm">
+                <div class="text-xs text-gray-500">Total Students</div>
+                <div class="text-lg font-semibold">{{ consolidated_data|length }}</div>
+            </div>
+            <div class="bg-white p-3 rounded-md shadow-sm">
+                <div class="text-xs text-gray-500">Program</div>
+                <div class="text-lg font-semibold">{{ selected_program }}</div>
+            </div>
+            <div class="bg-white p-3 rounded-md shadow-sm">
+                <div class="text-xs text-gray-500">Academic Year</div>
+                <div class="text-lg font-semibold">{{ selected_year }}</div>
+            </div>
+            <div class="bg-white p-3 rounded-md shadow-sm">
+                <div class="text-xs text-gray-500">Course Code</div>
+                <div class="text-lg font-semibold">{{ selected_course }}</div>
+            </div>
+        </div>
+
+        <!-- Results Table -->
+        <div class="overflow-x-auto">
+            <table class="min-w-full divide-y divide-gray-200">
+                <thead class="bg-gray-50">
+                    <tr>
+                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Program</th>
+                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Type</th>
+                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Course</th>
+                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Roll Number</th>
+                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">CT1</th>
+                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">CT2</th>
+                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">DA1</th>
+                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">DA2</th>
+                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">AA</th>
+                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ATT</th>
+                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">EXT</th>
+                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">REM</th>
+                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Internal</th>
+                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">External</th>
+                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Total</th>
+                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Grade</th>
+                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Credits</th>
+                    </tr>
+                </thead>
+                <tbody class="bg-white divide-y divide-gray-200">
+                    {% for result in consolidated_data %}
+                    <tr class="hover:bg-gray-50">
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ result.program_name }}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ result.program_type }}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ result.course_code }}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ result.roll_number }}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                            {% for eval in result.evaluation_details %}
+                                {% if eval.evaluation_name == 'CT1' %}
+                                    {{ eval.marks_obtained|default:'-' }}/{{ eval.maximum_marks }}
+                                {% endif %}
+                            {% endfor %}
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                            {% for eval in result.evaluation_details %}
+                                {% if eval.evaluation_name == 'CT2' %}
+                                    {{ eval.marks_obtained|default:'-' }}/{{ eval.maximum_marks }}
+                                {% endif %}
+                            {% endfor %}
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                            {% for eval in result.evaluation_details %}
+                                {% if eval.evaluation_name == 'DA1' %}
+                                    {{ eval.marks_obtained|default:'-' }}/{{ eval.maximum_marks }}
+                                {% endif %}
+                            {% endfor %}
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                            {% for eval in result.evaluation_details %}
+                                {% if eval.evaluation_name == 'DA2' %}
+                                    {{ eval.marks_obtained|default:'-' }}/{{ eval.maximum_marks }}
+                                {% endif %}
+                            {% endfor %}
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                            {% for eval in result.evaluation_details %}
+                                {% if eval.evaluation_name == 'AA' %}
+                                    {{ eval.marks_obtained|default:'-' }}/{{ eval.maximum_marks }}
+                                {% endif %}
+                            {% endfor %}
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                            {% for eval in result.evaluation_details %}
+                                {% if eval.evaluation_name == 'ATT' %}
+                                    {{ eval.marks_obtained|default:'-' }}/{{ eval.maximum_marks }}
+                                {% endif %}
+                            {% endfor %}
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                            {% for eval in result.evaluation_details %}
+                                {% if eval.evaluation_name == 'EXT' %}
+                                    {{ eval.marks_obtained|default:'-' }}/{{ eval.maximum_marks }}
+                                {% endif %}
+                            {% endfor %}
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                            {% for eval in result.evaluation_details %}
+                                {% if eval.evaluation_name == 'REM' %}
+                                    {{ eval.marks_obtained|default:'-' }}/{{ eval.maximum_marks }}
+                                {% endif %}
+                            {% endfor %}
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ result.internal_marks|default:'-' }}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ result.external_marks|default:'-' }}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ result.total_marks|default:'-' }}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full 
+                                {% if result.grades == 'A' or result.grades == 'A-' %}
+                                    bg-green-100 text-green-800
+                                {% elif result.grades == 'B' or result.grades == 'B-' %}
+                                    bg-blue-100 text-blue-800
+                                {% elif result.grades == 'C' or result.grades == 'C-' %}
+                                    bg-yellow-100 text-yellow-800
+                                {% else %}
+                                    bg-gray-100 text-gray-800
+                                {% endif %}">
+                                {{ result.grades|default:'-' }}
+                            </span>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ result.credits_earned|default:'-' }}</td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="16" class="px-6 py-8 text-center text-gray-500 bg-gray-50">
+                            <div class="flex flex-col items-center justify-center">
+                                <svg class="w-12 h-12 text-gray-400 mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                                        d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M12 12h.01M12 12h.01M12 12h.01M12 12h.01M12 12h.01M12 12h.01"/>
+                                </svg>
+                                <p class="text-lg font-medium">No results found</p>
+                                <p class="text-sm text-gray-400">Try adjusting your filters or search criteria</p>
+                            </div>
+                        </td>
+                    </tr>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    {% else %}
+    <p>No Results</p>
+    {% endif %}
+</div>
+{% endblock %}
